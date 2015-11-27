@@ -21,6 +21,9 @@ module.exports = function (config, gulp) {
             path.join(config.paths.src, '/app/**/*.js'),
             path.join('!' + config.paths.src, '/app/**/*.spec.js'),
             path.join('!' + config.paths.src, '/app/**/*.mock.js'),
+            path.join(config.paths.src, '/components/**/*.js'),
+            path.join('!' + config.paths.src, '/components/**/*.spec.js'),
+            path.join('!' + config.paths.src, '/components/**/*.mock.js')
         ]);
     
         var injectOptions = {
