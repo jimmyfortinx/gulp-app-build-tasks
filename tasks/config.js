@@ -1,30 +1,15 @@
 var path = require('path');
 
-function getParentConfigFile(nodeModulesPath) {
-    var configFile = 'config';
-    
-    if(nodeModulesPath) {
-        return path.join(nodeModulesPath, '..', configFile);
-    } else {
-        return path.join('../../..', configFile);
-    }
-}
-
-/** 
- *  nodeModulesPath is required only when working with npm link in dev 
- *  environment.
- */
-module.exports = function (nodeModulesPath) {
-    var parentConfig = require(getParentConfigFile(nodeModulesPath));
-
+module.exports = function (userConfig) {
     return {
         angular: {
-            module: parentConfig.angular.module
+            module: userConfig.angular.module
         },
         /**
          *  The main paths of your project handle these with care
          */
         paths: {
+            karmaConf: userConfig.paths.karmaConf,
             src: 'src',
             dist: 'dist',
             tmp: '.tmp',
