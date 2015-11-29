@@ -10,6 +10,7 @@ module.exports = function (userConfig) {
          */
         paths: {
             karmaConf: userConfig.paths.karmaConf,
+            protractorConf: userConfig.paths.protractorConf,
             src: 'src',
             dist: 'dist',
             tmp: '.tmp',

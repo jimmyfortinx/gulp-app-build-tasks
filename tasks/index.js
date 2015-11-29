@@ -13,12 +13,10 @@ function gulpAppBuildTasks (userConfig, gulp) {
     require('./build')(config, gulp);
     require('./watch')(config, gulp);
     require('./unit-tests.js')(config, gulp);
-    
-	gulp.task('test:e2e', function () {
-		$.util.log('test:e2e called - not implemented yet');
-	});
+    require('./e2e-tests.js')(config, gulp);
 }
 
 gulpAppBuildTasks.karma = require('./karma');
+gulpAppBuildTasks.protractor = require('./protractor');
 
 module.exports = gulpAppBuildTasks;

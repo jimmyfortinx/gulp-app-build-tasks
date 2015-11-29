@@ -11,10 +11,6 @@ var util = require('util');
 
 var proxyMiddleware = require('http-proxy-middleware');
 
-browserSync.use(browserSyncSpa({
-    selector: '[ng-app]'// Only needed for angular apps
-}));
-
 module.exports = function (config, gulp) {
     function browserSyncInit(baseDir, browser) {
         browser = browser === undefined ? 'default' : browser;
@@ -46,6 +42,10 @@ module.exports = function (config, gulp) {
             browser: browser
         });
     }
+    
+    browserSync.use(browserSyncSpa({
+        selector: '[ng-app]'// Only needed for angular apps
+    }));
 
     gulp.task('serve', ['watch'], function () {
         browserSyncInit([path.join(config.paths.tmp, '/serve'), config.paths.src]);
