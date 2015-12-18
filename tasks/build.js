@@ -84,6 +84,8 @@ module.exports = function (config, gulp) {
 
         var sources = [
             path.join(config.paths.src, '/**/*'),
+            // We need to explicit .htaccess since /**/* don't seems to return it
+            path.join(config.paths.src, '/**/.htaccess'),
             path.join('!' + config.paths.src, '/**/*.{html,css,js}')
         ];
 
