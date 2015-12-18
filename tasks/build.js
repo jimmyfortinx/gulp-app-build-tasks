@@ -7,10 +7,12 @@ var $ = require('./utils/plugins-loader');
 module.exports = function (config, gulp) {
     gulp.task('partials', function () {
         var sources = [
-            path.join(config.paths.src, '/app/**/*.html'),
-            path.join(config.paths.tmp, '/serve/app/**/*.html')
+            path.join(config.paths.src, '/**/*.html'),
+            path.join(config.paths.tmp, '/serve/**/*.html'),
+            '!' + path.join(config.paths.src, '/index.html'),
+            '!' + path.join(config.paths.tmp, '/serve/index.html'),
         ];
-        
+
         return gulp.src(sources)
             .pipe($.minifyHtml({
                 empty: true,
@@ -18,12 +20,11 @@ module.exports = function (config, gulp) {
                 quotes: true
             }))
             .pipe($.angularTemplatecache('templateCacheHtml.js', {
-                module: config.angular.module,
-                root: 'app'
+                module: config.angular.module
             }))
             .pipe(gulp.dest(config.paths.tmp + '/partials/'));
     });
-    
+
     gulp.task('html', ['inject', 'partials'], function () {
         var partialsInjectFile = gulp.src(path.join(config.paths.tmp, '/partials/templateCacheHtml.js'), { read: false });
         var partialsInjectOptions = {
@@ -31,12 +32,12 @@ module.exports = function (config, gulp) {
             ignorePath: path.join(config.paths.tmp, '/partials'),
             addRootSlash: false
         };
-        
+
         var htmlFilter = $.filter('*.html', { restore: true });
         var jsFilter = $.filter('**/*.js', { restore: true });
         var cssFilter = $.filter('**/*.css', { restore: true });
         var assets;
-        
+
         return gulp.src(path.join(config.paths.tmp, '/serve/*.html'))
             .pipe($.inject(partialsInjectFile, partialsInjectOptions))
             .pipe(assets = $.useref.assets())
@@ -66,7 +67,7 @@ module.exports = function (config, gulp) {
             .pipe(gulp.dest(path.join(config.paths.dist, '/')))
             .pipe($.size({ title: path.join(config.paths.dist, '/'), showFiles: true }));
     });
-    
+
     // Only applies for fonts from bower dependencies
     // Custom fonts are handled by the "other" task
     gulp.task('fonts', function () {
@@ -75,25 +76,25 @@ module.exports = function (config, gulp) {
             .pipe($.flatten())
             .pipe(gulp.dest(path.join(config.paths.dist, '/fonts/')));
     });
-    
+
     gulp.task('other', function () {
         var fileFilter = $.filter(function (file) {
             return file.stat.isFile();
         });
-        
+
         var sources = [
             path.join(config.paths.src, '/**/*'),
             path.join('!' + config.paths.src, '/**/*.{html,css,js}')
         ];
-        
+
         return gulp.src(sources)
             .pipe(fileFilter)
             .pipe(gulp.dest(path.join(config.paths.dist, '/')));
     });
-    
+
     gulp.task('clean', function () {
         return $.del([path.join(config.paths.dist, '/'), path.join(config.paths.tmp, '/')]);
     });
-    
+
     gulp.task('build', ['html', 'fonts', 'other']);
 }
