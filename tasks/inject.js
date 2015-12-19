@@ -15,7 +15,7 @@ module.exports = function (config, gulp) {
         var injectStyles = gulp.src([
             path.join(config.paths.src, '/app/**/*.css')
         ], { read: false });
-    
+
         var injectScripts = gulp.src([
             path.join(config.paths.src, '/app/**/*.module.js'),
             path.join(config.paths.src, '/app/**/*.js'),
@@ -25,12 +25,12 @@ module.exports = function (config, gulp) {
             path.join('!' + config.paths.src, '/components/**/*.spec.js'),
             path.join('!' + config.paths.src, '/components/**/*.mock.js')
         ]);
-    
+
         var injectOptions = {
             ignorePath: [config.paths.src, path.join(config.paths.tmp, '/serve')],
             addRootSlash: false
         };
-    
+
         return gulp.src(path.join(config.paths.src, '/*.html'))
             .pipe($.inject(injectStyles, injectOptions))
             .pipe($.inject(injectScripts, injectOptions))

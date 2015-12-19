@@ -9,6 +9,11 @@ function isOnlyChange(event) {
 }
 
 module.exports = function (config, gulp) {
+    // We leave if no karma conf file exists
+    if(!config.karma) {
+        return;
+    }
+
     var pathSrcHtml = [
         path.join(config.paths.src, '/**/*.html')
     ];
@@ -33,7 +38,7 @@ module.exports = function (config, gulp) {
         }
 
         var localConfig = {
-            configFile: config.paths.karmaConf,
+            configFile: config.karma.conf,
             singleRun: singleRun,
             autoWatch: !singleRun,
             reporters: reporters,

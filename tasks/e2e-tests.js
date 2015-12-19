@@ -7,6 +7,11 @@ var $ = require('./utils/plugins-loader');
 var browserSync = require('browser-sync');
 
 module.exports = function (config, gulp) {
+    // We leave if no protractor conf file exists
+    if(!config.protractor) {
+        return;
+    }
+
     // Downloads the selenium webdriver
     gulp.task('webdriver-update', $.protractor.webdriver_update);
 
@@ -18,7 +23,7 @@ module.exports = function (config, gulp) {
 
         gulp.src(path.join(config.paths.e2e, '/**/*.js'))
             .pipe($.protractor.protractor({
-                configFile: config.paths.protractorConf,
+                configFile: config.protractor.conf,
                 args: args
             }))
             .on('error', function (err) {

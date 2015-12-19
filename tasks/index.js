@@ -3,7 +3,7 @@ var $ = require('./utils/plugins-loader');
 
 function gulpAppBuildTasks (userConfig, gulp) {
     var config = require('./config')(userConfig);
-    
+
     if(!gulp) {
         gulp = require('gulp');
     }

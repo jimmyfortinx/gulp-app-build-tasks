@@ -1,21 +1,22 @@
 var path = require('path');
+var _ = require('lodash');
+var IsThere = require("is-there");
+
+var defaultKarmaConfName = "karma.conf.js";
+var defaultProtractorConfName = "protractor.conf.js";
 
 module.exports = function (userConfig) {
-    return {
-        angular: {
-            module: userConfig.angular.module
-        },
+    var newConfig = {
         /**
          *  The main paths of your project handle these with care
          */
         paths: {
-            karmaConf: userConfig.paths.karmaConf,
-            protractorConf: userConfig.paths.protractorConf,
             src: 'src',
             dist: 'dist',
             tmp: '.tmp',
             e2e: 'e2e'
         },
+
         /**
          *  Wiredep is the lib which inject bower dependencies in your project
          *  Mainly used to inject script tags in the index.html but also used
@@ -25,5 +26,43 @@ module.exports = function (userConfig) {
             exclude: [/\/bootstrap\.js$/],
             directory: 'bower_components'
         }
+    };
+
+    var projectDirectory = getProjectDirectory();
+    /**
+     * Angular configuration
+     */
+    if(_.has(userConfig, 'angular')) {
+        newConfig.angular = {
+            module: _.get(userConfig, 'angular.module', null)
+        }
     }
+
+    /**
+     * Karma configuration
+     */
+    setConfPathIfExists(defaultKarmaConfName, 'karma.conf');
+
+    /**
+     * Protractor configuration
+     */
+    setConfPathIfExists(defaultProtractorConfName, 'protractor.conf');
+
+    function setConfPathIfExists (defaultConfName, newConfigProperty) {
+        var confPath = path.join(projectDirectory, defaultConfName);
+        if(IsThere(confPath)) {
+            _.set(newConfig, newConfigProperty, confPath);
+        }
+    }
+
+    function getProjectDirectory() {
+        // This parameter is useful only when npm link is used
+        if(_.has(userConfig, 'projectDirectory')) {
+            return userConfig.projectDirectory;
+        } else {
+            return path.join(__dirname, "..");
+        }
+    }
+
+    return newConfig;
 }
