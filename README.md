@@ -32,18 +32,18 @@ The minimum npm version required is 3 because they started supporting the flat d
 - **webdriver-standalone**
 
 ## File structure
-| Path                                       | Description |
-|---                                         |---          |
-| /app/\*\*/*.{supported file formats}       | Application related code    |
-| /app/\*\*/*.spec.js                        | [Optional] Application related unit tests |
-| /components\*\*/*.{supported file formats} | [Optional] Components related code |
-| /components/\*\*/*.spec.js                 | [Optional] Components related unit tests |
-| /e2e/\*\*/*.{po.js, spec.js}               | [Optional] End-to-end unit tests |
-| .htaccess                                  | [Optional] Will be copied to the dist folder if present |
+| Path                                           | Description |
+|---                                             |---          |
+| /src/app/\*\*/*.{supported file formats}       | Application related code    |
+| /src/app/\*\*/*.spec.js                        | [Optional] Application related unit tests |
+| /src/components\*\*/*.{supported file formats} | [Optional] Components related code |
+| /src/components/\*\*/*.spec.js                 | [Optional] Components related unit tests |
+| /e2e/\*\*/*.{po.js, spec.js}                   | [Optional] End-to-end unit tests |
+| .htaccess                                      | [Optional] Will be copied to the dist folder if present |
 
 ## Supported programming languages
 Some languages are currently supported on this project and other will be supported
-later. They can be used under the **/app** and **/components** folders.
+later. They can be used under the **/src/app** and **/src/components** folders.
 
 - **Javascript**: .js
 - **Css**: .css
