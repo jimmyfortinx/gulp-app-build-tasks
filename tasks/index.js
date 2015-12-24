@@ -1,11 +1,24 @@
 var path = require('path');
 var $ = require('./utils/plugins-loader');
 
-function gulpAppBuildTasks (userConfig, gulp) {
-    var config = require('./config')(userConfig);
+var gulp;
+var config;
 
+exports.use = function (userGulp) {
+    gulp = userGulp;
+}
+
+exports.configure = function (userConfig) {
+    config = require('./config')(userConfig);
+}
+
+exports.registerTasks = function () {
     if(!gulp) {
         gulp = require('gulp');
+    }
+
+    if(!config) {
+        config = require('./config')();
     }
 
     require('./scripts')(config, gulp);
@@ -16,7 +29,5 @@ function gulpAppBuildTasks (userConfig, gulp) {
     require('./e2e-tests.js')(config, gulp);
 }
 
-gulpAppBuildTasks.karma = require('./karma');
-gulpAppBuildTasks.protractor = require('./protractor');
-
-module.exports = gulpAppBuildTasks;
+exports.karma = require('./karma');
+exports.protractor = require('./protractor');
