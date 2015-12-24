@@ -1,4 +1,6 @@
 var path = require('path');
+var gulpNodeBuildTasks = require('gulp-node-build-tasks');
+
 var $ = require('./utils/plugins-loader');
 
 var gulp;
@@ -10,6 +12,10 @@ exports.use = function (userGulp) {
 
 exports.configure = function (userConfig) {
     config = require('./config')(userConfig);
+
+    if(config.server) {
+        gulpNodeBuildTasks.configure(config.server);
+    }
 }
 
 exports.registerTasks = function () {
@@ -19,6 +25,11 @@ exports.registerTasks = function () {
 
     if(!config) {
         config = require('./config')();
+    }
+
+    if(config.hasServer) {
+        gulpNodeBuildTasks.use(gulp);
+        gulpNodeBuildTasks.registerSubTasks();
     }
 
     require('./scripts')(config, gulp);

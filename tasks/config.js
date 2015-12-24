@@ -29,24 +29,12 @@ module.exports = function (userConfig) {
     };
 
     var projectDirectory = getProjectDirectory();
-    /**
-     * Angular configuration
-     */
-    if(_.has(userConfig, 'angular')) {
-        newConfig.angular = {
-            module: _.get(userConfig, 'angular.module', null)
-        }
-    }
 
-    /**
-     * Karma configuration
-     */
-    setConfPathIfExists(defaultKarmaConfName, 'karma.conf');
-
-    /**
-     * Protractor configuration
-     */
-    setConfPathIfExists(defaultProtractorConfName, 'protractor.conf');
+    configureClientPaths();
+    configureServer();
+    configureAngular();
+    configureKarma();
+    configureProtractor();
 
     function setConfPathIfExists (defaultConfName, newConfigProperty) {
         var confPath = path.join(projectDirectory, defaultConfName);
@@ -62,6 +50,46 @@ module.exports = function (userConfig) {
         } else {
             return path.join(__dirname, "..");
         }
+    }
+
+    function configureClientPaths () {
+        if (IsThere(path.join(projectDirectory, 'client'))) {
+            newConfig.paths.src = path.join('client', newConfig.paths.src);
+            newConfig.paths.dist = path.join('client', newConfig.paths.dist);
+            newConfig.paths.tmp = path.join('client', newConfig.paths.tmp);
+            newConfig.paths.e2e = path.join('client', newConfig.paths.e2e);
+        }
+    }
+
+    function configureServer () {
+        if (IsThere(path.join(projectDirectory, 'server'))) {
+            newConfig.hasServer = true;
+
+            newConfig.server = {
+                paths: {
+                    src: path.join('server', 'src'),
+                    dist: path.join('server', 'dist'),
+                    tmp: path.join('server', '.tmp'),
+                    e2e: path.join('server', 'e2e')
+                }
+            }
+        }
+    }
+
+    function configureAngular () {
+        if(_.has(userConfig, 'angular')) {
+            newConfig.angular = {
+                module: _.get(userConfig, 'angular.module', null)
+            }
+        }
+    }
+
+    function configureKarma () {
+        setConfPathIfExists(defaultKarmaConfName, 'karma.conf');
+    }
+
+    function configureProtractor () {
+        setConfPathIfExists(defaultProtractorConfName, 'protractor.conf');
     }
 
     return newConfig;
