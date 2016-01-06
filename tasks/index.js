@@ -6,6 +6,8 @@ var $ = require('./utils/plugins-loader');
 var gulp;
 var config;
 
+var scriptsModule = require('./scripts');
+
 exports.use = function (userGulp) {
     gulp = userGulp;
 }
@@ -32,7 +34,7 @@ exports.registerTasks = function () {
         gulpNodeBuildTasks.registerSubTasks();
     }
 
-    require('./scripts')(config, gulp);
+    scriptsModule.registerTasks(config, gulp);
     require('./inject')(config, gulp);
     require('./build')(config, gulp);
     require('./watch')(config, gulp);
