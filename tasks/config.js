@@ -1,6 +1,7 @@
 var path = require('path');
 var _ = require('lodash');
 var IsThere = require("is-there");
+var common = require('gulp-common-build-tasks');
 
 var defaultKarmaConfName = "karma.conf.js";
 var defaultProtractorConfName = "protractor.conf.js";
@@ -27,6 +28,9 @@ module.exports = function (userConfig) {
             directory: 'bower_components'
         }
     };
+
+    common.scripts.addDefaultJsHintConfig(newConfig);
+    newConfig.jshint.globals.angular = false;
 
     var projectDirectory = getProjectDirectory();
 
