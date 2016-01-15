@@ -60,5 +60,8 @@
     "uglify-save-license": "^0.4.1",
     "webpack-stream": "^2.2.0",
     "wiredep": "^2.2.2"
+  },
+  "devDependencies": {
+    "gulp-debug": "^2.1.2"
   }
 }

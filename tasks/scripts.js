@@ -47,14 +47,4 @@ exports.registerSubTasks = function (config, gulp) {
 
 exports.registerTasks = function (config, gulp) {
     exports.registerSubTasks(config, gulp);
-
-    var tasks = {
-        'scripts': [clientTasksRegister.getSubTask('scripts')]
-    };
-
-    if(config.hasServer) {
-        tasks.scripts.push(serverTasksRegister.getSubTask('scripts'));
-    }
-
-    clientTasksRegister.registerTasks(gulp, tasks);
 }

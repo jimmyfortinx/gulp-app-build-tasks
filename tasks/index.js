@@ -7,6 +7,8 @@ var gulp;
 var config;
 
 var scriptsModule = require('./scripts');
+var injectModule = require('./inject');
+var buildModule = require('./build');
 
 exports.use = function (userGulp) {
     gulp = userGulp;
@@ -35,8 +37,8 @@ exports.registerTasks = function () {
     }
 
     scriptsModule.registerTasks(config, gulp);
-    require('./inject')(config, gulp);
-    require('./build')(config, gulp);
+    injectModule.registerTasks(config, gulp);
+    buildModule.registerTasks(config, gulp);
     require('./watch')(config, gulp);
     require('./unit-tests.js')(config, gulp);
     require('./e2e-tests.js')(config, gulp);

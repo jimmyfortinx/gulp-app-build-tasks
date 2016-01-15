@@ -10,8 +10,11 @@ var $ = require('./utils/plugins-loader');
 var wiredep = require('wiredep').stream;
 var _ = require('lodash');
 
-module.exports = function (config, gulp) {
-    gulp.task('inject', ['scripts'], function () {
+var clientTasksRegister = require('./utils/client-tasks-register');
+var serverTasksRegister = require('./utils/server-tasks-register');
+
+exports.clientInject = function (config, gulp, callback) {
+    function task() {
         var injectStyles = gulp.src([
             path.join(config.paths.src, '/app/**/*.css')
         ], { read: false });
@@ -31,10 +34,31 @@ module.exports = function (config, gulp) {
             addRootSlash: false
         };
 
-        return gulp.src(path.join(config.paths.src, '/*.html'))
+        var stream = gulp.src(path.join(config.paths.src, '/*.html'))
             .pipe($.inject(injectStyles, injectOptions))
             .pipe($.inject(injectScripts, injectOptions))
             .pipe(wiredep(_.extend({}, config.wiredep)))
             .pipe(gulp.dest(path.join(config.paths.tmp, '/serve')));
-    });
+
+        stream.on('end', callback);
+    }
+
+    var runSequence = require('run-sequence').use(gulp);
+
+    runSequence(
+        clientTasksRegister.getSubTask('scripts'),
+        task
+    );
+}
+
+exports.registerSubTasks = function (config, gulp) {
+    var tasks = {
+        'inject': 'clientInject',
+    };
+
+    clientTasksRegister.registerSubTasks(exports, config, gulp, tasks);
+}
+
+exports.registerTasks = function (config, gulp) {
+    exports.registerSubTasks(config, gulp);
 }
