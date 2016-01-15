@@ -29,10 +29,10 @@ module.exports = function (userConfig) {
         }
     };
 
-    common.scripts.addDefaultJsHintConfig(newConfig);
+    common.config.addDefaultJsHintConfig(newConfig);
     newConfig.jshint.globals.angular = false;
 
-    var projectDirectory = getProjectDirectory();
+    var projectDirectory = common.config.getProjectDirectory(userConfig);
 
     configureClientPaths();
     configureServer();
@@ -44,15 +44,6 @@ module.exports = function (userConfig) {
         var confPath = path.join(projectDirectory, defaultConfName);
         if(IsThere(confPath)) {
             _.set(newConfig, newConfigProperty, confPath);
-        }
-    }
-
-    function getProjectDirectory() {
-        // This parameter is useful only when npm link is used
-        if(_.has(userConfig, 'projectDirectory')) {
-            return userConfig.projectDirectory;
-        } else {
-            return path.join(__dirname, "..");
         }
     }
 
