@@ -59,8 +59,8 @@ module.exports = function (userConfig) {
     function configureClientPaths () {
         if (IsThere(path.join(projectDirectory, 'client'))) {
             newConfig.paths.src = path.join('client', newConfig.paths.src);
-            newConfig.paths.dist = path.join('client', newConfig.paths.dist);
-            newConfig.paths.tmp = path.join('client', newConfig.paths.tmp);
+            newConfig.paths.dist = path.join(newConfig.paths.dist, 'client');
+            newConfig.paths.tmp = path.join(newConfig.paths.tmp, 'client');
             newConfig.paths.e2e = path.join('client', newConfig.paths.e2e);
         }
     }
@@ -72,8 +72,8 @@ module.exports = function (userConfig) {
             newConfig.server = {
                 paths: {
                     src: path.join('server', 'src'),
-                    dist: path.join('server', 'dist'),
-                    tmp: path.join('server', '.tmp'),
+                    dist: path.join('dist', 'server'),
+                    tmp: path.join('.tmp', 'server'),
                     e2e: path.join('server', 'e2e')
                 }
             }
