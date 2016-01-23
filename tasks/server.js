@@ -38,8 +38,6 @@ function browserSyncInit(config, baseDir, browser) {
     */
     // server.middleware = proxyMiddleware('/users', {target: 'http://jsonplaceholder.typicode.com', proxyHost: 'jsonplaceholder.typicode.com'});
 
-    console.log("browserSync", server, browser);
-
     browserSync.instance = browserSync.init({
         startPath: '/',
         server: server,
@@ -124,6 +122,8 @@ exports.registerTasks = function (config, gulp) {
     if(config.hasServer) {
         tasks['serve'].push(serverTasksRegister.getSubTask('serve'));
         tasks['serve:dist'].push(serverTasksRegister.getSubTask('serve:dist'));
+        tasks['serve:e2e'].push(serverTasksRegister.getSubTask('serve'));
+        tasks['serve:e2e-dist'].push(serverTasksRegister.getSubTask('serve:dist'));
     }
 
     clientTasksRegister.registerTasks(gulp, tasks);

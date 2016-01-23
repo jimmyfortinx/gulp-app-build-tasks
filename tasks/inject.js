@@ -40,7 +40,7 @@ exports.clientInject = function (config, gulp, callback) {
             .pipe(wiredep(_.extend({}, config.wiredep)))
             .pipe(gulp.dest(path.join(config.paths.tmp, '/serve')));
 
-        stream.on('end', callback);
+        stream.on('finish', callback);
     }
 
     var runSequence = require('run-sequence').use(gulp);

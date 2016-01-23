@@ -70,7 +70,7 @@ exports.html = function (config, gulp, callback) {
             .pipe(gulp.dest(path.join(config.paths.dist, '/')))
             .pipe($.size({ title: path.join(config.paths.dist, '/'), showFiles: true }))
 
-         stream.on('end', callback);
+         stream.on('finish', callback);
     }
 
     var runSequence = require('run-sequence').use(gulp);
@@ -115,11 +115,9 @@ exports.clientBuild = function (config, gulp, callback) {
     var runSequence = require('run-sequence').use(gulp);
 
     runSequence(
-        [
-            clientTasksRegister.getSubTask('build:html'),
-            clientTasksRegister.getSubTask('build:fonts'),
-            clientTasksRegister.getSubTask('build:other')
-        ],
+        clientTasksRegister.getSubTask('build:html'),
+        clientTasksRegister.getSubTask('build:fonts'),
+        clientTasksRegister.getSubTask('build:other'),
         callback
     );
 }
