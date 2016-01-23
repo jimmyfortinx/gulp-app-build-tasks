@@ -6,12 +6,15 @@ var $ = require('./utils/plugins-loader');
 
 var browserSync = require('browser-sync');
 
+var clientTasksRegister = require('./utils/client-tasks-register');
+var serverTasksRegister = require('./utils/server-tasks-register');
+
 function isOnlyChange(event) {
     return event.type === 'changed';
 }
 
-module.exports = function (config, gulp) {
-    gulp.task('watch', ['inject'], function () {
+exports.watch = function (config, gulp, callback) {
+    function task() {
         gulp.watch([path.join(config.paths.src, '/*.html'), 'bower.json'], ['inject']);
 
         gulp.watch(path.join(config.paths.src, '/app/**/*.css'), function (event) {
@@ -33,7 +36,26 @@ module.exports = function (config, gulp) {
         gulp.watch(path.join(config.paths.src, '/app/**/*.html'), function (event) {
             browserSync.reload(event.path);
         });
-    });
-    
-    require('./server')(config, gulp);
+
+        callback();
+    }
+
+    var runSequence = require('run-sequence').use(gulp);
+
+    runSequence(
+        clientTasksRegister.getSubTask('inject'),
+        task
+    );
+}
+
+exports.registerSubTasks = function (config, gulp) {
+    var tasks = {
+        'watch': true
+    };
+
+    clientTasksRegister.registerSubTasks(exports, config, gulp, tasks);
+}
+
+exports.registerTasks = function (config, gulp) {
+    exports.registerSubTasks(config, gulp);
 }

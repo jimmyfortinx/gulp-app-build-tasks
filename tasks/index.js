@@ -9,6 +9,8 @@ var config;
 var scriptsModule = require('./scripts');
 var injectModule = require('./inject');
 var buildModule = require('./build');
+var watchModule = require('./watch');
+var serverModule = require('./server');
 
 exports.use = function (userGulp) {
     gulp = userGulp;
@@ -39,7 +41,8 @@ exports.registerTasks = function () {
     scriptsModule.registerTasks(config, gulp);
     injectModule.registerTasks(config, gulp);
     buildModule.registerTasks(config, gulp);
-    require('./watch')(config, gulp);
+    watchModule.registerTasks(config, gulp);
+    serverModule.registerTasks(config, gulp);
     require('./unit-tests.js')(config, gulp);
     require('./e2e-tests.js')(config, gulp);
 }
