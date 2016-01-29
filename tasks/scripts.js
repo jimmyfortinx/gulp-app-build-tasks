@@ -20,14 +20,19 @@ exports.reload = function(config, gulp) {
 exports.clientScripts = function (config, gulp, callback) {
     var runSequence = require('run-sequence').use(gulp);
 
-    runSequence(
-        [
-            clientTasksRegister.getSubTask('scripts:jshint'),
-            clientTasksRegister.getSubTask('scripts:jscs'),
-            clientTasksRegister.getSubTask('scripts:reload')
-        ],
-        callback
-    );
+    var tasks = [];
+
+    if (config.jshintEnabled) {
+        tasks.push(clientTasksRegister.getSubTask('scripts:jshint'));
+    }
+
+    if (config.jscsEnabled) {
+        tasks.push(clientTasksRegister.getSubTask('scripts:jscs'));
+    }
+
+    tasks.push(clientTasksRegister.getSubTask('scripts:reload'));
+
+    runSequence(tasks, callback);
 }
 
 exports.registerSubTasks = function (config, gulp) {

@@ -29,10 +29,11 @@ module.exports = function (userConfig) {
         }
     };
 
-    common.config.addDefaultJsHintConfig(newConfig);
-    newConfig.jshint.globals.angular = false;
+    common.config.apply(newConfig, userConfig);
 
-    var projectDirectory = common.config.getProjectDirectory(userConfig);
+    if(newConfig.jshint) {
+        newConfig.jshint.globals.angular = false;
+    }
 
     configureClientPaths();
     configureServer();
@@ -41,14 +42,14 @@ module.exports = function (userConfig) {
     configureProtractor();
 
     function setConfPathIfExists (defaultConfName, newConfigProperty) {
-        var confPath = path.join(projectDirectory, defaultConfName);
+        var confPath = path.join(newConfig.projectDirectory, defaultConfName);
         if(IsThere(confPath)) {
             _.set(newConfig, newConfigProperty, confPath);
         }
     }
 
     function configureClientPaths () {
-        if (IsThere(path.join(projectDirectory, 'client'))) {
+        if (IsThere(path.join(newConfig.projectDirectory, 'client'))) {
             newConfig.paths.src = path.join('client', newConfig.paths.src);
             newConfig.paths.dist = path.join(newConfig.paths.dist, 'client');
             newConfig.paths.tmp = path.join(newConfig.paths.tmp, 'client');
@@ -57,7 +58,7 @@ module.exports = function (userConfig) {
     }
 
     function configureServer () {
-        if (IsThere(path.join(projectDirectory, 'server'))) {
+        if (IsThere(path.join(newConfig.projectDirectory, 'server'))) {
             newConfig.hasServer = true;
 
             newConfig.server = {
