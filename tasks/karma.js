@@ -3,26 +3,26 @@ var path = require('path');
 var _ = require('lodash');
 var wiredep = require('wiredep');
 
-module.exports = function (karmaConfig, userConfig) {
+module.exports = function(karmaConfig, userConfig) {
     var conf = require('./config')(userConfig);
 
     var pathSrcHtml = [
         path.join(conf.paths.src, '/**/*.html')
     ];
-    
+
     function listFiles() {
         var wiredepOptions = _.extend({}, conf.wiredep, {
             dependencies: true,
             devDependencies: true
         });
-    
+
         return wiredep(wiredepOptions).js
             .concat([
                 path.join(conf.paths.src, '/app/**/*.module.js'),
                 path.join(conf.paths.src, '/app/**/*.js'),
                 path.join(conf.paths.src, '/components/**/*.js'),
                 path.join(conf.paths.src, '/**/*.spec.js'),
-                path.join(conf.paths.src, '/**/*.mock.js'),
+                path.join(conf.paths.src, '/**/*.mock.js')
             ])
             .concat(pathSrcHtml);
     }
@@ -70,7 +70,7 @@ module.exports = function (karmaConfig, userConfig) {
     // It was not possible to do it there because karma doesn't let us now if we are
     // running a single test or not
     configuration.preprocessors = {};
-    pathSrcHtml.forEach(function (path) {
+    pathSrcHtml.forEach(function(path) {
         configuration.preprocessors[path] = ['ng-html2js'];
     });
 

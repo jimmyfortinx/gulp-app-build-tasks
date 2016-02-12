@@ -15,9 +15,9 @@ exports.reload = function(config, gulp) {
     return gulp.src(path.join(config.paths.src, '/app/**/*.js'))
             .pipe(browserSync.reload({ stream: true }))
             .pipe($.size());
-}
+};
 
-exports.clientScripts = function (config, gulp, callback) {
+exports.clientScripts = function(config, gulp, callback) {
     var runSequence = require('run-sequence').use(gulp);
 
     var tasks = [];
@@ -33,13 +33,13 @@ exports.clientScripts = function (config, gulp, callback) {
     tasks.push(clientTasksRegister.getSubTask('scripts:reload'));
 
     runSequence(tasks, callback);
-}
+};
 
-exports.registerSubTasks = function (config, gulp) {
+exports.registerSubTasks = function(config, gulp) {
     var commonTasks = {
         'scripts:jshint': 'jshint',
-        'scripts:jscs': 'jscs',
-    }
+        'scripts:jscs': 'jscs'
+    };
 
     var tasks = {
         'scripts:reload': 'reload',
@@ -48,8 +48,8 @@ exports.registerSubTasks = function (config, gulp) {
 
     clientTasksRegister.registerSubTasks(common.scripts, config, gulp, commonTasks);
     clientTasksRegister.registerSubTasks(exports, config, gulp, tasks);
-}
+};
 
-exports.registerTasks = function (config, gulp) {
+exports.registerTasks = function(config, gulp) {
     exports.registerSubTasks(config, gulp);
-}
+};

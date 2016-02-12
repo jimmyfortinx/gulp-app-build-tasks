@@ -7,12 +7,12 @@ var $ = require('./utils/plugins-loader');
 var clientTasksRegister = require('./utils/client-tasks-register');
 var serverTasksRegister = require('./utils/server-tasks-register');
 
-exports.partials = function (config, gulp) {
+exports.partials = function(config, gulp) {
     var sources = [
         path.join(config.paths.src, '/**/*.html'),
         path.join(config.paths.tmp, '/serve/**/*.html'),
         '!' + path.join(config.paths.src, '/index.html'),
-        '!' + path.join(config.paths.tmp, '/serve/index.html'),
+        '!' + path.join(config.paths.tmp, '/serve/index.html')
     ];
 
     return gulp.src(sources)
@@ -25,11 +25,12 @@ exports.partials = function (config, gulp) {
             module: config.angular.module
         }))
         .pipe(gulp.dest(config.paths.tmp + '/partials/'));
-}
+};
 
-exports.html = function (config, gulp, callback) {
-    function task () {
-        var partialsInjectFile = gulp.src(path.join(config.paths.tmp, '/partials/templateCacheHtml.js'), { read: false });
+exports.html = function(config, gulp, callback) {
+    function task() {
+        var partialsInjectFileSrc = path.join(config.paths.tmp, '/partials/templateCacheHtml.js');
+        var partialsInjectFile = gulp.src(partialsInjectFileSrc, { read: false });
         var partialsInjectOptions = {
             starttag: '<!-- inject:partials -->',
             ignorePath: path.join(config.paths.tmp, '/partials'),
@@ -68,30 +69,30 @@ exports.html = function (config, gulp, callback) {
             }))
             .pipe(htmlFilter.restore)
             .pipe(gulp.dest(path.join(config.paths.dist, '/')))
-            .pipe($.size({ title: path.join(config.paths.dist, '/'), showFiles: true }))
+            .pipe($.size({ title: path.join(config.paths.dist, '/'), showFiles: true }));
 
-         stream.on('finish', callback);
+        stream.on('finish', callback);
     }
 
     var runSequence = require('run-sequence').use(gulp);
 
     var dependencies = [clientTasksRegister.getSubTask('inject')];
-    if(config.angular) {
+    if (config.angular) {
         dependencies.push(clientTasksRegister.getSubTask('build:partials'));
     }
 
     runSequence(dependencies, task);
-}
+};
 
-exports.fonts = function (config, gulp) {
+exports.fonts = function(config, gulp) {
     return gulp.src($.mainBowerFiles())
         .pipe($.filter('**/*.{eot,svg,ttf,woff,woff2}'))
         .pipe($.flatten())
         .pipe(gulp.dest(path.join(config.paths.dist, '/fonts/')));
-}
+};
 
-exports.other = function (config, gulp) {
-    var fileFilter = $.filter(function (file) {
+exports.other = function(config, gulp) {
+    var fileFilter = $.filter(function(file) {
         return file.stat.isFile();
     });
 
@@ -105,13 +106,13 @@ exports.other = function (config, gulp) {
     return gulp.src(sources)
         .pipe(fileFilter)
         .pipe(gulp.dest(path.join(config.paths.dist, '/')));
-}
+};
 
-exports.clean = function (config, gulp) {
+exports.clean = function(config) {
     return $.del([path.join(config.paths.dist, '/'), path.join(config.paths.tmp, '/')]);
-}
+};
 
-exports.clientBuild = function (config, gulp, callback) {
+exports.clientBuild = function(config, gulp, callback) {
     var runSequence = require('run-sequence').use(gulp);
 
     runSequence(
@@ -120,9 +121,9 @@ exports.clientBuild = function (config, gulp, callback) {
         clientTasksRegister.getSubTask('build:other'),
         callback
     );
-}
+};
 
-exports.registerSubTasks = function (config, gulp) {
+exports.registerSubTasks = function(config, gulp) {
     var tasks = {
         'build:partials': 'partials',
         'build:html': 'html',
@@ -133,9 +134,9 @@ exports.registerSubTasks = function (config, gulp) {
     };
 
     clientTasksRegister.registerSubTasks(exports, config, gulp, tasks);
-}
+};
 
-exports.registerTasks = function (config, gulp) {
+exports.registerTasks = function(config, gulp) {
     exports.registerSubTasks(config, gulp);
 
     var tasks = {
@@ -143,10 +144,10 @@ exports.registerTasks = function (config, gulp) {
         'clean': [clientTasksRegister.getSubTask('clean')]
     };
 
-    if(config.hasServer) {
+    if (config.hasServer) {
         tasks.build.push(serverTasksRegister.getSubTask('build'));
         tasks.clean.push(serverTasksRegister.getSubTask('clean'));
     }
 
     clientTasksRegister.registerTasks(gulp, tasks);
-}
+};

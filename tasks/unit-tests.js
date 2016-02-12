@@ -8,9 +8,9 @@ function isOnlyChange(event) {
     return event.type === 'changed';
 }
 
-module.exports = function (config, gulp) {
+module.exports = function(config, gulp) {
     // We leave if no karma conf file exists
-    if(!config.karma) {
+    if (!config.karma) {
         return;
     }
 
@@ -26,15 +26,15 @@ module.exports = function (config, gulp) {
         var reporters = ['progress'];
         var preprocessors = {};
 
-        pathSrcHtml.forEach(function (path) {
+        pathSrcHtml.forEach(function(path) {
             preprocessors[path] = ['ng-html2js'];
         });
 
         if (singleRun) {
-            pathSrcJs.forEach(function (path) {
+            pathSrcJs.forEach(function(path) {
                 preprocessors[path] = ['coverage'];
             });
-            reporters.push('coverage')
+            reporters.push('coverage');
         }
 
         var localConfig = {
@@ -45,17 +45,17 @@ module.exports = function (config, gulp) {
             preprocessors: preprocessors
         };
 
-        var server = new karma.Server(localConfig, function (failCount) {
-            done(failCount ? new Error("Failed " + failCount + " tests.") : null);
-        })
+        var server = new karma.Server(localConfig, function(failCount) {
+            done(failCount ? new Error('Failed ' + failCount + ' tests.') : null);
+        });
         server.start();
     }
 
-    gulp.task('test', ['scripts'], function (done) {
+    gulp.task('test', ['scripts'], function(done) {
         runTests(true, done);
     });
 
-    gulp.task('test:auto', ['watch'], function (done) {
+    gulp.task('test:auto', ['watch'], function(done) {
         runTests(false, done);
     });
-}
+};

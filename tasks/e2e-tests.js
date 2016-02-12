@@ -6,16 +6,17 @@ var $ = require('./utils/plugins-loader');
 
 var browserSync = require('browser-sync');
 
-module.exports = function (config, gulp) {
+module.exports = function(config, gulp) {
     // We leave if no protractor conf file exists
-    if(!config.protractor) {
+    if (!config.protractor) {
         return;
     }
 
     // Downloads the selenium webdriver
+    /* jshint camelcase: false */
     gulp.task('webdriver-update', $.protractor.webdriver_update);
-
     gulp.task('webdriver-standalone', $.protractor.webdriver_standalone);
+    /* jshint camelcase: true */
 
     function runProtractor(done) {
         var params = process.argv;
@@ -26,11 +27,11 @@ module.exports = function (config, gulp) {
                 configFile: config.protractor.conf,
                 args: args
             }))
-            .on('error', function (err) {
+            .on('error', function(err) {
                 // Make sure failed tests cause gulp to exit non-zero
                 throw err;
             })
-            .on('end', function () {
+            .on('end', function() {
                 // Close browser sync server
                 browserSync.exit();
                 done();
@@ -40,5 +41,4 @@ module.exports = function (config, gulp) {
     gulp.task('protractor', ['protractor:src']);
     gulp.task('protractor:src', ['serve:e2e', 'webdriver-update'], runProtractor);
     gulp.task('protractor:dist', ['serve:e2e-dist', 'webdriver-update'], runProtractor);
-
-}
+};

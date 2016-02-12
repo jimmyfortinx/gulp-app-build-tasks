@@ -36,7 +36,10 @@ function browserSyncInit(config, baseDir, browser) {
     *
     * For more details and option, https://github.com/chimurai/http-proxy-middleware/blob/v0.0.5/README.md
     */
-    // server.middleware = proxyMiddleware('/users', {target: 'http://jsonplaceholder.typicode.com', proxyHost: 'jsonplaceholder.typicode.com'});
+    // server.middleware = proxyMiddleware('/users', {
+    //     target: 'http://jsonplaceholder.typicode.com',
+    //     proxyHost: 'jsonplaceholder.typicode.com'
+    // });
 
     browserSync.instance = browserSync.init({
         startPath: '/',
@@ -60,38 +63,38 @@ function browserSyncTask(config, gulp, callback, dependencies, baseDir, browser)
     );
 }
 
-exports.serve = function (config, gulp, callback) {
-    var dependencies = clientTasksRegister.getSubTask("watch");
+exports.serve = function(config, gulp, callback) {
+    var dependencies = clientTasksRegister.getSubTask('watch');
     var baseDir = [path.join(config.paths.tmp, '/serve'), config.paths.src];
 
     browserSyncTask(config, gulp, callback, dependencies, baseDir);
-}
+};
 
-exports.serveDist = function (config, gulp, callback) {
-    var dependencies = clientTasksRegister.getSubTask("build");
+exports.serveDist = function(config, gulp, callback) {
+    var dependencies = clientTasksRegister.getSubTask('build');
     var baseDir = config.paths.dist;
 
     browserSyncTask(config, gulp, callback, dependencies, baseDir);
-}
+};
 
-exports.serveE2E = function (config, gulp, callback) {
-    var dependencies = clientTasksRegister.getSubTask("inject");
+exports.serveE2E = function(config, gulp, callback) {
+    var dependencies = clientTasksRegister.getSubTask('inject');
     var baseDir = [config.paths.tmp + '/serve', config.paths.src];
     var browser = [];
 
     browserSyncTask(config, gulp, callback, dependencies, baseDir, browser);
-}
+};
 
-exports.serveE2EDist = function (config, gulp, callback) {
-    var dependencies = clientTasksRegister.getSubTask("build");
+exports.serveE2EDist = function(config, gulp, callback) {
+    var dependencies = clientTasksRegister.getSubTask('build');
     var baseDir = config.paths.dist;
     var browser = [];
 
     browserSyncTask(config, gulp, callback, dependencies, baseDir, browser);
-}
+};
 
-exports.registerSubTasks = function (config, gulp) {
-    if(config.angular) {
+exports.registerSubTasks = function(config, gulp) {
+    if (config.angular) {
         browserSync.use(browserSyncSpa({
             selector: '[ng-app]'// Only needed for angular apps
         }));
@@ -105,9 +108,9 @@ exports.registerSubTasks = function (config, gulp) {
     };
 
     clientTasksRegister.registerSubTasks(exports, config, gulp, tasks);
-}
+};
 
-exports.registerTasks = function (config, gulp) {
+exports.registerTasks = function(config, gulp) {
     exports.registerSubTasks(config, gulp);
 
     var tasks = {
@@ -119,12 +122,12 @@ exports.registerTasks = function (config, gulp) {
         'start': 'serve'
     };
 
-    if(config.hasServer) {
-        tasks['serve'].push(serverTasksRegister.getSubTask('serve'));
+    if (config.hasServer) {
+        tasks.serve.push(serverTasksRegister.getSubTask('serve'));
         tasks['serve:dist'].push(serverTasksRegister.getSubTask('serve:dist'));
         tasks['serve:e2e'].push(serverTasksRegister.getSubTask('serve'));
         tasks['serve:e2e-dist'].push(serverTasksRegister.getSubTask('serve:dist'));
     }
 
     clientTasksRegister.registerTasks(gulp, tasks);
-}
+};

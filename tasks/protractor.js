@@ -1,6 +1,6 @@
-module.exports = function (userConfig) {
+module.exports = function(userConfig) {
     var config = require('./config')(userConfig);
-    
+
     return {
         // The address of a running selenium server.
         //seleniumAddress: 'http://localhost:4444/wd/hub',
@@ -22,5 +22,5 @@ module.exports = function (userConfig) {
             showColors: true,
             defaultTimeoutInterval: 30000
         }
-    }
-}
+    };
+};

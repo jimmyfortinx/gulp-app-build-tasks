@@ -13,7 +13,7 @@ var _ = require('lodash');
 var clientTasksRegister = require('./utils/client-tasks-register');
 var serverTasksRegister = require('./utils/server-tasks-register');
 
-exports.clientInject = function (config, gulp, callback) {
+exports.clientInject = function(config, gulp, callback) {
     function task() {
         var injectStyles = gulp.src([
             path.join(config.paths.src, '/app/**/*.css')
@@ -49,16 +49,16 @@ exports.clientInject = function (config, gulp, callback) {
         clientTasksRegister.getSubTask('scripts'),
         task
     );
-}
+};
 
-exports.registerSubTasks = function (config, gulp) {
+exports.registerSubTasks = function(config, gulp) {
     var tasks = {
-        'inject': 'clientInject',
+        'inject': 'clientInject'
     };
 
     clientTasksRegister.registerSubTasks(exports, config, gulp, tasks);
-}
+};
 
-exports.registerTasks = function (config, gulp) {
+exports.registerTasks = function(config, gulp) {
     exports.registerSubTasks(config, gulp);
-}
+};

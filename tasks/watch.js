@@ -13,11 +13,11 @@ function isOnlyChange(event) {
     return event.type === 'changed';
 }
 
-exports.watch = function (config, gulp, callback) {
+exports.watch = function(config, gulp, callback) {
     function task() {
         gulp.watch([path.join(config.paths.src, '/*.html'), 'bower.json'], ['inject']);
 
-        gulp.watch(path.join(config.paths.src, '/app/**/*.css'), function (event) {
+        gulp.watch(path.join(config.paths.src, '/app/**/*.css'), function(event) {
             if (isOnlyChange(event)) {
                 browserSync.reload(event.path);
             } else {
@@ -25,7 +25,7 @@ exports.watch = function (config, gulp, callback) {
             }
         });
 
-        gulp.watch(path.join(config.paths.src, '/app/**/*.js'), function (event) {
+        gulp.watch(path.join(config.paths.src, '/app/**/*.js'), function(event) {
             if (isOnlyChange(event)) {
                 gulp.start('scripts');
             } else {
@@ -33,7 +33,7 @@ exports.watch = function (config, gulp, callback) {
             }
         });
 
-        gulp.watch(path.join(config.paths.src, '/app/**/*.html'), function (event) {
+        gulp.watch(path.join(config.paths.src, '/app/**/*.html'), function(event) {
             browserSync.reload(event.path);
         });
 
@@ -46,16 +46,16 @@ exports.watch = function (config, gulp, callback) {
         clientTasksRegister.getSubTask('inject'),
         task
     );
-}
+};
 
-exports.registerSubTasks = function (config, gulp) {
+exports.registerSubTasks = function(config, gulp) {
     var tasks = {
         'watch': true
     };
 
     clientTasksRegister.registerSubTasks(exports, config, gulp, tasks);
-}
+};
 
-exports.registerTasks = function (config, gulp) {
+exports.registerTasks = function(config, gulp) {
     exports.registerSubTasks(config, gulp);
-}
+};

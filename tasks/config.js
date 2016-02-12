@@ -1,12 +1,12 @@
 var path = require('path');
 var _ = require('lodash');
-var IsThere = require("is-there");
+var IsThere = require('is-there');
 var common = require('gulp-common-build-tasks');
 
-var defaultKarmaConfName = "karma.conf.js";
-var defaultProtractorConfName = "protractor.conf.js";
+var defaultKarmaConfName = 'karma.conf.js';
+var defaultProtractorConfName = 'protractor.conf.js';
 
-module.exports = function (userConfig) {
+module.exports = function(userConfig) {
     var newConfig = {
         /**
          *  The main paths of your project handle these with care
@@ -31,7 +31,7 @@ module.exports = function (userConfig) {
 
     common.config.apply(newConfig, userConfig);
 
-    if(newConfig.jshint) {
+    if (newConfig.jshint) {
         newConfig.jshint.globals.angular = false;
     }
 
@@ -41,14 +41,14 @@ module.exports = function (userConfig) {
     configureKarma();
     configureProtractor();
 
-    function setConfPathIfExists (defaultConfName, newConfigProperty) {
+    function setConfPathIfExists(defaultConfName, newConfigProperty) {
         var confPath = path.join(newConfig.projectDirectory, defaultConfName);
-        if(IsThere(confPath)) {
+        if (IsThere(confPath)) {
             _.set(newConfig, newConfigProperty, confPath);
         }
     }
 
-    function configureClientPaths () {
+    function configureClientPaths() {
         if (IsThere(path.join(newConfig.projectDirectory, 'client'))) {
             newConfig.paths.src = path.join('client', newConfig.paths.src);
             newConfig.paths.dist = path.join(newConfig.paths.dist, 'client');
@@ -57,7 +57,7 @@ module.exports = function (userConfig) {
         }
     }
 
-    function configureServer () {
+    function configureServer() {
         if (IsThere(path.join(newConfig.projectDirectory, 'server'))) {
             newConfig.hasServer = true;
 
@@ -68,25 +68,25 @@ module.exports = function (userConfig) {
                     tmp: path.join('.tmp', 'server'),
                     e2e: path.join('server', 'e2e')
                 }
-            }
+            };
         }
     }
 
-    function configureAngular () {
-        if(_.has(userConfig, 'angular')) {
+    function configureAngular() {
+        if (_.has(userConfig, 'angular')) {
             newConfig.angular = {
                 module: _.get(userConfig, 'angular.module', null)
-            }
+            };
         }
     }
 
-    function configureKarma () {
+    function configureKarma() {
         setConfPathIfExists(defaultKarmaConfName, 'karma.conf');
     }
 
-    function configureProtractor () {
+    function configureProtractor() {
         setConfPathIfExists(defaultProtractorConfName, 'protractor.conf');
     }
 
     return newConfig;
-}
+};

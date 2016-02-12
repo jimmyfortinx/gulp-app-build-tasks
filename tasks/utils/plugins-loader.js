@@ -1,3 +1,3 @@
 module.exports = require('gulp-load-plugins')({
-  pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
+    pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
 });
