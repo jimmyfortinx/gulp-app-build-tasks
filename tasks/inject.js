@@ -1,6 +1,7 @@
 'use strict';
 
 var path = require('path');
+var common = require('gulp-common-build-tasks');
 
 var browserSync = require('browser-sync');
 var webpack = require('webpack-stream');
@@ -10,55 +11,35 @@ var $ = require('./utils/plugins-loader');
 var wiredep = require('wiredep').stream;
 var _ = require('lodash');
 
-var clientTasksRegister = require('./utils/client-tasks-register');
-var serverTasksRegister = require('./utils/server-tasks-register');
+var tasks = common.tasks();
 
-exports.clientInject = function(config, gulp, callback) {
-    function task() {
-        var injectStyles = gulp.src([
-            path.join(config.paths.src, '/app/**/*.css')
-        ], { read: false });
+tasks.import(require('./scripts'));
 
-        var injectScripts = gulp.src([
-            path.join(config.paths.src, '/app/**/*.module.js'),
-            path.join(config.paths.src, '/app/**/*.js'),
-            path.join('!' + config.paths.src, '/app/**/*.spec.js'),
-            path.join('!' + config.paths.src, '/app/**/*.mock.js'),
-            path.join(config.paths.src, '/components/**/*.js'),
-            path.join('!' + config.paths.src, '/components/**/*.spec.js'),
-            path.join('!' + config.paths.src, '/components/**/*.mock.js')
-        ]);
+tasks.create('.inject', ['.scripts'], function(gulp, config) {
+    var injectStyles = gulp.src([
+        path.join(config.paths.src, '/app/**/*.css')
+    ], { read: false });
 
-        var injectOptions = {
-            ignorePath: [config.paths.src, path.join(config.paths.tmp, '/serve')],
-            addRootSlash: false
-        };
+    var injectScripts = gulp.src([
+        path.join(config.paths.src, '/app/**/*.module.js'),
+        path.join(config.paths.src, '/app/**/*.js'),
+        path.join('!' + config.paths.src, '/app/**/*.spec.js'),
+        path.join('!' + config.paths.src, '/app/**/*.mock.js'),
+        path.join(config.paths.src, '/components/**/*.js'),
+        path.join('!' + config.paths.src, '/components/**/*.spec.js'),
+        path.join('!' + config.paths.src, '/components/**/*.mock.js')
+    ]);
 
-        var stream = gulp.src(path.join(config.paths.src, '/*.html'))
-            .pipe($.inject(injectStyles, injectOptions))
-            .pipe($.inject(injectScripts, injectOptions))
-            .pipe(wiredep(_.extend({}, config.wiredep)))
-            .pipe(gulp.dest(path.join(config.paths.tmp, '/serve')));
-
-        stream.on('finish', callback);
-    }
-
-    var runSequence = require('run-sequence').use(gulp);
-
-    runSequence(
-        clientTasksRegister.getSubTask('scripts'),
-        task
-    );
-};
-
-exports.registerSubTasks = function(config, gulp) {
-    var tasks = {
-        'inject': 'clientInject'
+    var injectOptions = {
+        ignorePath: [config.paths.src, path.join(config.paths.tmp, '/serve')],
+        addRootSlash: false
     };
 
-    clientTasksRegister.registerSubTasks(exports, config, gulp, tasks);
-};
+    return gulp.src(path.join(config.paths.src, '/*.html'))
+        .pipe($.inject(injectStyles, injectOptions))
+        .pipe($.inject(injectScripts, injectOptions))
+        .pipe(wiredep(_.extend({}, config.wiredep)))
+        .pipe(gulp.dest(path.join(config.paths.tmp, '/serve')));
+});
 
-exports.registerTasks = function(config, gulp) {
-    exports.registerSubTasks(config, gulp);
-};
+module.exports = tasks;
