@@ -2,11 +2,10 @@ var gulp = require('gulp');
 var gulpNodeBuildTasks = require('gulp-node-build-tasks');
 
 var config = {
+    projectDirectory: __dirname,
     paths: {
         src: "tasks"
     }
 };
 
-gulpNodeBuildTasks.use(gulp);
-gulpNodeBuildTasks.configure(config);
-gulpNodeBuildTasks.registerTasks();
+gulpNodeBuildTasks.apply(config, gulp);

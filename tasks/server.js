@@ -1,6 +1,7 @@
 'use strict';
 
 var path = require('path');
+var common = require('gulp-common-build-tasks');
 
 var $ = require('./utils/plugins-loader');
 
@@ -11,8 +12,9 @@ var util = require('util');
 
 var proxyMiddleware = require('http-proxy-middleware');
 
-var clientTasksRegister = require('./utils/client-tasks-register');
-var serverTasksRegister = require('./utils/server-tasks-register');
+var tasks = common.tasks();
+
+tasks.import(require('./watch'));
 
 function browserSyncInit(config, baseDir, browser) {
     browser = browser === undefined ? 'default' : browser;
@@ -48,7 +50,7 @@ function browserSyncInit(config, baseDir, browser) {
     });
 }
 
-function browserSyncTask(config, gulp, callback, dependencies, baseDir, browser) {
+function browserSyncTask(gulp, config, callback, dependencies, baseDir, browser) {
     function task() {
         browserSyncInit(config, baseDir, browser);
 
@@ -63,71 +65,34 @@ function browserSyncTask(config, gulp, callback, dependencies, baseDir, browser)
     );
 }
 
-exports.serve = function(config, gulp, callback) {
-    var dependencies = clientTasksRegister.getSubTask('watch');
+tasks.create('.serve', function(gulp, config, callback) {
+    var dependencies = 'app.watch';
     var baseDir = [path.join(config.paths.tmp, '/serve'), config.paths.src];
 
-    browserSyncTask(config, gulp, callback, dependencies, baseDir);
-};
+    browserSyncTask(gulp, config, callback, dependencies, baseDir);
+});
 
-exports.serveDist = function(config, gulp, callback) {
-    var dependencies = clientTasksRegister.getSubTask('build');
+tasks.create('.serve:dist', function(gulp, config, callback) {
+    var dependencies = 'app.build';
     var baseDir = config.paths.dist;
 
-    browserSyncTask(config, gulp, callback, dependencies, baseDir);
-};
+    browserSyncTask(gulp, config, callback, dependencies, baseDir);
+});
 
-exports.serveE2E = function(config, gulp, callback) {
-    var dependencies = clientTasksRegister.getSubTask('inject');
+tasks.create('.serve:e2e', function(gulp, config, callback) {
+    var dependencies = 'app.inject';
     var baseDir = [config.paths.tmp + '/serve', config.paths.src];
     var browser = [];
 
-    browserSyncTask(config, gulp, callback, dependencies, baseDir, browser);
-};
+    browserSyncTask(gulp, config, callback, dependencies, baseDir, browser);
+});
 
-exports.serveE2EDist = function(config, gulp, callback) {
-    var dependencies = clientTasksRegister.getSubTask('build');
+tasks.create('.serve:e2e-dist', function(gulp, config, callback) {
+    var dependencies = 'app.build';
     var baseDir = config.paths.dist;
     var browser = [];
 
-    browserSyncTask(config, gulp, callback, dependencies, baseDir, browser);
-};
+    browserSyncTask(gulp, config, callback, dependencies, baseDir, browser);
+});
 
-exports.registerSubTasks = function(config, gulp) {
-    if (config.angular) {
-        browserSync.use(browserSyncSpa({
-            selector: '[ng-app]'// Only needed for angular apps
-        }));
-    }
-
-    var tasks = {
-        'serve': true,
-        'serve:dist': 'serveDist',
-        'serve:e2e': 'serveE2E',
-        'serve:e2e-dist': 'serveE2EDist'
-    };
-
-    clientTasksRegister.registerSubTasks(exports, config, gulp, tasks);
-};
-
-exports.registerTasks = function(config, gulp) {
-    exports.registerSubTasks(config, gulp);
-
-    var tasks = {
-        'serve': [clientTasksRegister.getSubTask('serve')],
-        'serve:dist': [clientTasksRegister.getSubTask('serve:dist')],
-        'serve:e2e': [clientTasksRegister.getSubTask('serve:e2e')],
-        'serve:e2e-dist': [clientTasksRegister.getSubTask('serve:e2e-dist')],
-        // Used by Visual Studio Code to run debugger
-        'start': 'serve'
-    };
-
-    if (config.hasServer) {
-        tasks.serve.push(serverTasksRegister.getSubTask('serve'));
-        tasks['serve:dist'].push(serverTasksRegister.getSubTask('serve:dist'));
-        tasks['serve:e2e'].push(serverTasksRegister.getSubTask('serve'));
-        tasks['serve:e2e-dist'].push(serverTasksRegister.getSubTask('serve:dist'));
-    }
-
-    clientTasksRegister.registerTasks(gulp, tasks);
-};
+module.exports = tasks;

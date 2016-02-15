@@ -1,51 +1,31 @@
-var path = require('path');
-var gulpNodeBuildTasks = require('gulp-node-build-tasks');
+var common = require('gulp-common-build-tasks');
+var node = require('gulp-node-build-tasks');
 
-var $ = require('./utils/plugins-loader');
+var tasks = common.tasks();
 
-var gulp;
-var config;
+function hasServerEnabled(value) {
+    return config => {
+        return config.hasServer ? value : false;
+    };
+}
 
-var scriptsModule = require('./scripts');
-var injectModule = require('./inject');
-var buildModule = require('./build');
-var watchModule = require('./watch');
-var serverModule = require('./server');
+tasks.import(require('./app'));
+tasks.import(hasServerEnabled(require('./node')));
+tasks.karma = require('./karma');
+tasks.protractor = require('./protractor');
 
-exports.use = function(userGulp) {
-    gulp = userGulp;
-};
+tasks.addTransformConfigurationFunction(require('./config'));
 
-exports.configure = function(userConfig) {
-    config = require('./config')(userConfig);
+tasks.create('build', ['app.build', hasServerEnabled('node.build')]);
+tasks.create('clean', ['app.clean', hasServerEnabled('node.clean')]);
+tasks.create('e2e', ['app.protractor']);
+tasks.create('e2e:src', ['app.protractor:src']);
+tasks.create('e2e:dist', ['app.protractor:dist']);
+tasks.create('serve', ['app.serve', hasServerEnabled('node.serve')]);
+tasks.create('serve:dist', ['app.serve:dist', hasServerEnabled('node.serve:dist')]);
+tasks.create('serve:e2e', ['app.serve:e2e', hasServerEnabled('node.serve')]);
+tasks.create('serve:e2e-dist', ['app.serve:e2e-dist', hasServerEnabled('node.serve:dist')]);
+tasks.create('test', ['app.test', hasServerEnabled('node.test')]);
+tasks.create('test:auto', ['app.test:auto', hasServerEnabled('node.test:auto')]);
 
-    if (config.server) {
-        gulpNodeBuildTasks.configure(config.server);
-    }
-};
-
-exports.registerTasks = function() {
-    if (!gulp) {
-        gulp = require('gulp');
-    }
-
-    if (!config) {
-        config = require('./config')();
-    }
-
-    if (config.hasServer) {
-        gulpNodeBuildTasks.use(gulp);
-        gulpNodeBuildTasks.registerSubTasks();
-    }
-
-    scriptsModule.registerTasks(config, gulp);
-    injectModule.registerTasks(config, gulp);
-    buildModule.registerTasks(config, gulp);
-    watchModule.registerTasks(config, gulp);
-    serverModule.registerTasks(config, gulp);
-    require('./unit-tests.js')(config, gulp);
-    require('./e2e-tests.js')(config, gulp);
-};
-
-exports.karma = require('./karma');
-exports.protractor = require('./protractor');
+module.exports = tasks;
