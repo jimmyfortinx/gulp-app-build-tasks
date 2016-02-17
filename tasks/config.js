@@ -2,6 +2,7 @@ var path = require('path');
 var _ = require('lodash');
 var IsThere = require('is-there');
 var common = require('gulp-common-build-tasks');
+var gutil = require('gulp-util');
 
 var defaultKarmaConfName = 'karma.conf.js';
 var defaultProtractorConfName = 'protractor.conf.js';
@@ -26,7 +27,21 @@ module.exports = function(userConfig) {
         wiredep: {
             exclude: [/\/bootstrap\.js$/],
             directory: 'bower_components'
-        }
+        },
+
+        /**
+         *  Common implementation for an error handler of a Gulp plugin
+         */
+        errorHandler: function(title) {
+            'use strict';
+
+            return function(err) {
+                gutil.log(gutil.colors.red('[' + title + ']'), err.toString());
+                this.emit('end');
+            };
+        },
+
+        less: _.get(userConfig, 'less')
     };
 
     common.config.apply(newConfig, userConfig);

@@ -13,7 +13,10 @@ var tasks = common.tasks();
 tasks.import(common.scripts);
 
 tasks.create('.reload', function(gulp, config) {
-    return gulp.src(path.join(config.paths.src, '/app/**/*.js'))
+    return gulp.src([
+        path.join(config.paths.src, '/app/**/*.js'),
+        path.join(config.paths.src, '/components/**/*.js')
+    ])
             .pipe(browserSync.reload({ stream: true }))
             .pipe($.size());
 });
