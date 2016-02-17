@@ -14,10 +14,13 @@ var _ = require('lodash');
 var tasks = common.tasks();
 
 tasks.import(require('./scripts'));
+tasks.import(require('./styles'));
 
-tasks.create('.inject', ['.scripts'], function(gulp, config) {
+tasks.create('.inject', ['.scripts', '.styles'], function(gulp, config) {
     var injectStyles = gulp.src([
-        path.join(config.paths.src, '/app/**/*.css')
+        path.join(config.paths.src, '/app/**/*.css'),
+        path.join(config.paths.src, '/components/**/*.css'),
+        path.join(config.paths.tmp, '/serve/**/*.css')
     ], { read: false });
 
     var injectScripts = gulp.src([
