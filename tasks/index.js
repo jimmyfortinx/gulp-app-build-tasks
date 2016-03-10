@@ -26,6 +26,6 @@ tasks.create('serve:dist', ['app.serve:dist', hasServerEnabled('node.serve:dist'
 tasks.create('serve:e2e', ['app.serve:e2e', hasServerEnabled('node.serve')]);
 tasks.create('serve:e2e-dist', ['app.serve:e2e-dist', hasServerEnabled('node.serve:dist')]);
 tasks.create('test', ['app.test', hasServerEnabled('node.test')]);
-tasks.create('test:auto', ['app.test:auto', hasServerEnabled('node.test:auto')]);
+tasks.create('test:auto', ['app.test:auto', hasServerEnabled('node.watch')]);
 
 module.exports = tasks;
