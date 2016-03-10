@@ -44,7 +44,7 @@ module.exports = function(userConfig) {
         less: _.get(userConfig, 'less')
     };
 
-    common.config.apply(newConfig, userConfig);
+    common.commonConfig.apply(newConfig, userConfig);
 
     if (newConfig.jshint) {
         newConfig.jshint.globals.angular = false;
