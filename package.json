@@ -1,6 +1,6 @@
 {
   "name": "gulp-app-build-tasks",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This module will add standard gulp tasks to start building a web application.",
   "main": "tasks/index.js",
   "scripts": {
