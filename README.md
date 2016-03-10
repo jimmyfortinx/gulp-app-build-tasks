@@ -1,4 +1,7 @@
 # gulp-app-build-tasks
+[![NPM Version](https://img.shields.io/npm/v/gulp-app-build-tasks.svg?style=flat-square)](https://www.npmjs.org/package/gulp-app-build-tasks)
+[![Download Month](https://img.shields.io/npm/dm/gulp-app-build-tasks.svg?style=flat-square)](https://www.npmjs.org/package/gulp-app-build-tasks)
+
 This module will add standard gulp tasks to start building a web application.
 
 ## Minimum npm version
