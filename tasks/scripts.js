@@ -10,7 +10,7 @@ var $ = require('./utils/plugins-loader');
 
 var tasks = common.tasks();
 
-tasks.import(common.commonScripts);
+tasks.import(common.scripts);
 
 tasks.create('.reload', function(gulp, config) {
     return gulp.src([

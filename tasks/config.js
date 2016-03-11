@@ -82,7 +82,8 @@ module.exports = function(userConfig) {
                     dist: path.join('dist', 'server'),
                     tmp: path.join('.tmp', 'server'),
                     e2e: path.join('server', 'e2e')
-                }
+                },
+                projectDirectory: newConfig.projectDirectory
             };
         }
     }
