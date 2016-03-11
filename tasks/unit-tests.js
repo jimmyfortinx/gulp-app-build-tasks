@@ -53,11 +53,11 @@ function runTests(gulp, config, singleRun, done) {
     server.start();
 }
 
-tasks.create('.test', function(gulp, config, done) {
+tasks.create('.test', ['.scripts'], function(gulp, config, done) {
     runTests(gulp, config, true, done);
 });
 
-tasks.create('.test:auto', function(gulp, config, done) {
+tasks.create('.test:auto', ['.watch'], function(gulp, config, done) {
     runTests(gulp, config, false, done);
 });
 
