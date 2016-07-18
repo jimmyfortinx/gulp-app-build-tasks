@@ -93,6 +93,13 @@ tasks.create('.build:fonts', function(gulp, config) {
         .pipe(gulp.dest(path.join(config.paths.dist, '/fonts/')));
 });
 
+tasks.create('.build:images', function(gulp, config) {
+    return gulp.src($.mainBowerFiles())
+        .pipe($.filter('**/*.{jpg,jpeg,png,gif,bmp}'))
+        .pipe($.flatten())
+        .pipe(gulp.dest(path.join(config.paths.dist, '/images/')));
+});
+
 tasks.create('.build:other', function(gulp, config) {
     var fileFilter = $.filter(function(file) {
         return file.stat.isFile();
@@ -114,6 +121,6 @@ tasks.create('.clean', function(gulp, config) {
     return $.del([path.join(config.paths.dist, '/'), path.join(config.paths.tmp, '/')]);
 });
 
-tasks.create('.build', ['.build:html', '.build:fonts', '.build:other']);
+tasks.create('.build', ['.build:html', '.build:fonts', '.build:images', '.build:other']);
 
 module.exports = tasks;
