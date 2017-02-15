@@ -51,24 +51,24 @@ tasks.create('.build:html', function(gulp, config, callback) {
             .pipe(jsFilter)
             .pipe($.sourcemaps.init())
             .pipe($.ngAnnotate())
-            //.pipe($.uglify({ preserveComments: $.uglifySaveLicense }))
+            .pipe($.uglify({ preserveComments: $.uglifySaveLicense }))
             .pipe($.sourcemaps.write('maps'))
             .pipe(jsFilter.restore)
             .pipe(cssFilter)
             .pipe($.sourcemaps.init())
-            //.pipe($.minifyCss({ processImport: false }))
+            .pipe($.minifyCss({ processImport: false }))
             .pipe($.sourcemaps.write('maps'))
             .pipe(cssFilter.restore)
             .pipe(assets.restore())
             .pipe($.useref())
             .pipe($.revReplace())
             .pipe(htmlFilter)
-            /*.pipe($.minifyHtml({
+            .pipe($.minifyHtml({
                 empty: true,
                 spare: true,
                 quotes: true,
                 conditionals: true
-            }))*/
+            }))
             .pipe(htmlFilter.restore)
             .pipe(gulp.dest(path.join(config.paths.dist, '/')))
             .pipe($.size({ title: path.join(config.paths.dist, '/'), showFiles: true }));
